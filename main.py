@@ -3,14 +3,14 @@ from aes_encryption_use_case import AESEncryptionScheme
 from symmetric_encryption_scheme import SymmetricEncryptionScheme
 
 
-def decode_loop(encryption_scheme: SymmetricEncryptionScheme):
+def decrypt_loop(encryption_scheme: SymmetricEncryptionScheme):
     key = encryption_scheme.get_key()
 
     while (True):
         ciphertext = input("Enter the message to decode (Q to return to main menu): ")
         if ciphertext == "Q":
             return
-        plaintext = encryption_scheme.decode(ciphertext.encode("utf-8"))
+        plaintext = encryption_scheme.decrypt(ciphertext.encode("utf-8"))
         print(plaintext)
 
 def generate_new_key_loop(encryption_scheme: SymmetricEncryptionScheme):
@@ -24,13 +24,13 @@ def generate_new_key_loop(encryption_scheme: SymmetricEncryptionScheme):
             return
         
 
-def encode_loop(encryption_scheme: SymmetricEncryptionScheme):
+def encrypt_loop(encryption_scheme: SymmetricEncryptionScheme):
     while(True):
         plaintext = input("Please enter the plaintext to encode (Q to return to main menu): ")
         if plaintext == "Q":
             return
-        ciphertext = encryption_scheme.encode(plaintext)
-        print(ciphertext.decode("utf-8"))
+        ciphertext = encryption_scheme.encrypt(plaintext.encode("utf-8"))
+        print(ciphertext)
 
 
 def print_options():
@@ -52,9 +52,9 @@ def main():
             encryption_scheme = AESEncryptionScheme(key)
         
         if option == "D":
-            decode_loop(encryption_scheme)
+            decrypt_loop(encryption_scheme)
         elif option == "E":
-            encode_loop(encryption_scheme)
+            encrypt_loop(encryption_scheme)
         elif option == "K":
             generate_new_key_loop(encryption_scheme)
         elif option == "L":

@@ -14,7 +14,7 @@ class AESEncryptionScheme(SymmetricEncryptionScheme):
   def __init__(self, symmetric_key: str):
      self.symmetric_key = base64.urlsafe_b64decode(symmetric_key) if symmetric_key else None
 
-  def encode(self, plaintext):
+  def encrypt(self, plaintext):
       # Generate a random Initialization Vector (IV)
       iv = os.urandom(16)
       
@@ -24,14 +24,14 @@ class AESEncryptionScheme(SymmetricEncryptionScheme):
       
       # Pad the plaintext to make it a multiple of the block size (16 bytes for AES)
       padder = PKCS7(128).padder()
-      padded_data = padder.update(plaintext.encode()) + padder.finalize()
+      padded_data = padder.update(plaintext) + padder.finalize()
       
       # Encrypt the padded plaintext
       ciphertext = encryptor.update(padded_data) + encryptor.finalize()
       
-      return iv + ciphertext
+      return base64.b64encode(iv + ciphertext).decode('utf-8')
   
-  def decode(self, ciphertext_with_iv):
+  def decrypt(self, ciphertext_with_iv):
       iv, ciphertext = ciphertext_with_iv[:16], ciphertext_with_iv[16:]
 
       # Create a Cipher object with AES algorithm in CBC mode
@@ -45,7 +45,7 @@ class AESEncryptionScheme(SymmetricEncryptionScheme):
       unpadder = PKCS7(128).unpadder()
       plaintext = unpadder.update(padded_plaintext) + unpadder.finalize()
 
-      return plaintext.decode()
+      return base64.b64encode(plaintext.decode('utf-8'))
   
   def _generate_adjusted_key(self, password: str, salt: bytes) -> bytes:
     kdf = PBKDF2HMAC(

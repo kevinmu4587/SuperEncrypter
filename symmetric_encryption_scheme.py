@@ -8,11 +8,11 @@ class SymmetricEncryptionScheme(ABC):
         return self.symmetric_key
 
     @abstractmethod
-    def encode(self):
+    def encrypt(self):
         pass
 
     @abstractmethod
-    def decode(self):
+    def decrypt(self):
         pass
 
     @abstractmethod
